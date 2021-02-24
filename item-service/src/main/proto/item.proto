@@ -6,17 +6,24 @@ import "google/api/annotations.proto";
 
 package com.akkaserverless.hackathon.item;
 
+option java_package = "com.akkaserverless.hackathon.item";
+option java_outer_classname = "Items";
 
-message IemIdSearchCommand {
 
+message Item {
+  string id = 1 [(.cloudstate.entity_key) = true];
+}
+
+message ItemIdSearchCommand {
+  string item_id =  1 [(.cloudstate.entity_key) = true];
 }
 
 message ItemSearchResponse {
-
+  repeated Item item = 1;
 }
 
 service ItemService {
 
-  rpc search (IemIdSearchCommand) returns (stream ItemSearchResponse) {}
+  rpc Search (ItemIdSearchCommand) returns (stream ItemSearchResponse) {}
 
 }
