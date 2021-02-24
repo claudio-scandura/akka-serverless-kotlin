@@ -3,7 +3,7 @@
  */
 package com.akkaserverless.hackathon.item
 
-class RetailerService {
+class ItemService {
     val greeting: String
         get() {
             return "Hello World - Item service!"
@@ -11,5 +11,5 @@ class RetailerService {
 }
 
 fun main() {
-    println(RetailerService().greeting)
+    println(ItemService().greeting)
 }
