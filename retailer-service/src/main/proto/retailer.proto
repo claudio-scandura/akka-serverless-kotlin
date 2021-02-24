@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+import "cloudstate/entity_key.proto";
+import "google/protobuf/empty.proto";
+import "google/api/annotations.proto";
+
+package com.akkaserverless.hackathon.retailer;
+
+//message GetOrderCommand {
+//  string order_id = 1 [(.cloudstate.entity_key) = true];
+//}
+
+message Item {
+
+}
+
+message GetItemCommand {
+
+}
+
+message AddItemCommand {
+
+}
+
+message PriceUpdate {
+
+}
+
+service RetailerService {
+
+  // search an item in the retailer
+  rpc GetItem (GetItemCommand) returns (Item) {
+  }
+
+  // inserts or updates
+  rpc AddItem (AddItemCommand) returns (Item) {
+  }
+
+  // if the item exists returns a stream to its price updates
+  rpc getPriceUpdate(Item) returns (stream PriceUpdate);
+
+}

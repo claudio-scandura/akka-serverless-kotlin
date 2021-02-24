@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+import "cloudstate/entity_key.proto";
+import "google/protobuf/empty.proto";
+import "google/api/annotations.proto";
+
+package com.akkaserverless.hackathon.item;
+
+
+message IemIdSearchCommand {
+
+}
+
+message ItemSearchResponse {
+
+}
+
+service ItemService {
+
+  rpc search (IemIdSearchCommand) returns (stream ItemSearchResponse) {}
+
+}
