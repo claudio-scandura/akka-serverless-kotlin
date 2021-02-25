@@ -3,6 +3,8 @@
  */
 package com.akkaserverless.hackathon.retailer
 
+import io.cloudstate.kotlinsupport.cloudstate
+
 class RetailerService {
     val greeting: String
         get() {
@@ -11,5 +13,12 @@ class RetailerService {
 }
 
 fun main() {
+    cloudstate {
+        eventsourced {
+            entityService = RetailerEntity::class
+            descriptor = Retailers.getDescriptor().findServiceByName("RetailerService")
+            additionalDescriptors = mutableListOf(Retailers.getDescriptor())
+        }
+    }.start().toCompletableFuture().get()
     println(RetailerService().greeting)
 }

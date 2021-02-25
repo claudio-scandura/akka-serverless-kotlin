@@ -1,42 +1,61 @@
 syntax = "proto3";
 
+package com.akkaserverless.hackathon.retailer;
+option java_package = "com.akkaserverless.hackathon.retailer";
+option java_outer_classname = "Retailers";
+
 import "cloudstate/entity_key.proto";
 import "google/protobuf/empty.proto";
 import "google/api/annotations.proto";
 
-package com.akkaserverless.hackathon.retailer;
+message Item {
+  string item_id = 1;
+  string name = 2;
+  string description = 3;
+  int32 price = 4;
+}
 
-//message GetOrderCommand {
-//  string order_id = 1 [(.cloudstate.entity_key) = true];
+//message Retailer {
+//  string retailer_id = 1 [(.cloudstate.entity_key) = true];
+//  repeated Item items = 2;
 //}
 
-message Item {
-
+message FindItemCommand {
+  string retailer_id = 1 [(.cloudstate.entity_key) = true];
+  string item_id = 2;
 }
 
-message GetItemCommand {
-
+message UpsertItemCommand {
+  string retailer_id = 1 [(.cloudstate.entity_key) = true];
+  Item item = 2;
 }
 
-message AddItemCommand {
+message GetPriceUpdatesCommand {
+  string retailer_id = 1 [(.cloudstate.entity_key) = true];
+  string item_id = 2;
+}
 
+message ItemAdded {
+  Item item = 1;
+}
+
+message ItemUpdated {
+  Item item = 1;
 }
 
 message PriceUpdate {
-
+  string item_id = 1;
+  int32 price = 2;
 }
 
 service RetailerService {
 
   // search an item in the retailer
-  rpc GetItem (GetItemCommand) returns (Item) {
+  rpc FindItem (FindItemCommand) returns (Item) {
   }
 
   // inserts or updates
-  rpc AddItem (AddItemCommand) returns (Item) {
+  rpc UpsertItem (UpsertItemCommand) returns (google.protobuf.Empty) {
   }
-
-  // if the item exists returns a stream to its price updates
-  rpc getPriceUpdate(Item) returns (stream PriceUpdate);
 
 }

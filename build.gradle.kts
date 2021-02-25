@@ -4,10 +4,10 @@ import com.google.protobuf.gradle.protoc
 plugins {
     kotlin("jvm") version "1.4.20"
 
-    id("com.google.protobuf") version "0.8.15"
-    id("com.palantir.docker") version "0.25.0"
-    application
     idea
+    application
+    id("com.palantir.docker") version "0.25.0"
+    id("com.google.protobuf") version "0.8.15"
 }
 
 
@@ -21,6 +21,7 @@ subprojects {
         plugin("com.google.protobuf")
     }
 
+
     dependencies {
         implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
 
@@ -31,6 +32,9 @@ subprojects {
         testImplementation("org.jetbrains.kotlin:kotlin-test")
 
         testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
+        testImplementation("io.kotest:kotest-runner-junit5:4.4.1")
+        testImplementation("io.kotest:kotest-assertions-core:4.4.1")
+
 
         implementation("io.cloudstate:cloudstate-kotlin-support:0.5.2")
         implementation("com.google.api.grpc:proto-google-common-protos:2.0.1")
@@ -45,7 +49,7 @@ subprojects {
 
     protobuf {
         protoc {
-            artifact = "com.google.protobuf:protoc:3.9.0"
+            artifact = "com.google.protobuf:protoc:3.11.4"
         }
     }
 
@@ -55,6 +59,10 @@ subprojects {
     }
 
     tasks {
+
+        test {
+            useJUnitPlatform()
+        }
 
         docker {
 
