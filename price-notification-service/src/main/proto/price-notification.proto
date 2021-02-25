@@ -1,0 +1,87 @@
+syntax = "proto3";
+
+package com.akkaserverless.hackathon.notification.entities;
+option java_package = "com.akkaserverless.hackathon.notification.entities";
+option java_multiple_files = true;
+option java_generic_services= true;
+
+import "cloudstate/entity_key.proto";
+import "google/protobuf/empty.proto";
+import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
+
+message RetailItem {
+  string item_id = 1;
+  string name = 2;
+  string description = 3;
+  int32 price = 4;
+}
+
+message Retailer {
+  string retailer_id = 1 [(.cloudstate.entity_key) = true];
+  repeated RetailItem items = 2;
+}
+
+message FindItemCommand {
+  string retailer_id = 1 [(.cloudstate.entity_key) = true];
+  string item_id = 2;
+}
+
+message UpsertItemCommand {
+  string retailer_id = 1 [(.cloudstate.entity_key) = true];
+  RetailItem item = 2;
+}
+
+message ItemAdded {
+  RetailItem item = 1;
+}
+
+message ItemUpdated {
+  RetailItem item = 1;
+}
+
+service RetailerService {
+
+  // search an item in the retailer
+  rpc FindItem (FindItemCommand) returns (RetailItem) {
+  }
+
+  // inserts or updates
+  rpc UpsertItem (UpsertItemCommand) returns (google.protobuf.Empty) {
+  }
+
+}
+
+message RetailPrice {
+  string retailer_id = 1;
+  int32 price = 2;
+}
+
+message Item {
+  string id = 1 [(.cloudstate.entity_key) = true];
+  string description = 2;
+}
+
+message GetPriceCommand {
+  string item_id = 1 [(.cloudstate.entity_key) = true];
+}
+
+message GetPriceResponse {
+  Item item = 1;
+  repeated RetailPrice price = 2;
+}
+
+message UpdatePriceCommand {
+  string item_id = 1 [(.cloudstate.entity_key) = true];
+  Item item = 2;
+  RetailPrice retail_price = 3;
+  google.protobuf.Timestamp updated_at = 4;
+}
+
+service ItemService {
+
+  rpc UpdatePrice(UpdatePriceCommand) returns (google.protobuf.Empty) {}
+
+  rpc GetPrices(GetPriceCommand) returns (stream GetPriceResponse) {}
+
+}

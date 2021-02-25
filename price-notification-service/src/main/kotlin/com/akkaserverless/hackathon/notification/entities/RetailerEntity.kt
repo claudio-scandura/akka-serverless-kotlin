@@ -1,9 +1,6 @@
-package com.akkaserverless.hackathon.retailer
+package com.akkaserverless.hackathon.notification.entities
 
-import com.akkaserverless.hackathon.item.ItemService
-import com.akkaserverless.hackathon.item.Items
-import com.akkaserverless.hackathon.item.Items.UpdatePriceCommand
-import com.akkaserverless.hackathon.retailer.Retailers.*
+import com.akkaserverless.hackathon.notification.entities.*
 import com.google.protobuf.Timestamp
 import io.cloudstate.javasupport.eventsourced.CommandContext
 import io.cloudstate.javasupport.eventsourced.EventSourcedContext
@@ -19,10 +16,10 @@ class RetailerEntity(@EntityId val entityId: String, ctx: EventSourcedContext) {
 
     private val itemServiceCall = ctx.serviceCallFactory().lookup(ItemService::class.java.canonicalName, "UpdatePrice", UpdatePriceCommand::class.java)
 
-    private val state = mutableMapOf<String, Item>()
+    private val state = mutableMapOf<String, RetailItem>()
 
     @CommandHandler
-    fun findItem(command: FindItemCommand): Item? {
+    fun findItem(command: FindItemCommand): RetailItem? {
         return state[command.itemId]
     }
 
@@ -35,8 +32,8 @@ class RetailerEntity(@EntityId val entityId: String, ctx: EventSourcedContext) {
         }
         val updatePriceCommand = UpdatePriceCommand.newBuilder()
                 .setItemId(command.item.itemId)
-                .setItem(Items.Item.newBuilder().setDescription(command.item.description).setId(command.item.itemId))
-                .setRetailPrice(Items.RetailPrice.newBuilder().setRetailerId(entityId).setPrice(command.item.price))
+                .setItem(Item.newBuilder().setDescription(command.item.description).setId(command.item.itemId))
+                .setRetailPrice(RetailPrice.newBuilder().setRetailerId(entityId).setPrice(command.item.price))
                 .setUpdatedAt(Timestamp.newBuilder().setSeconds(System.currentTimeMillis()).setNanos(0))
                 .build()
         ctx.forward(itemServiceCall.createCall(updatePriceCommand))
