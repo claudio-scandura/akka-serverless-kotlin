@@ -15,11 +15,15 @@ class ItemService {
 fun main() {
 
     cloudstate {
-        eventsourced {
+        config {
+            host = "0.0.0.0"
+            port = 8080
+            loglevel = "DEBUG"
+        }
+        crdt {
             entityService = ItemEntity::class
             descriptor = Items.getDescriptor().findServiceByName("ItemService")
             additionalDescriptors = mutableListOf(Items.getDescriptor())
-            persistenceId = "item"
         }
     }.start().toCompletableFuture().get()
 }
