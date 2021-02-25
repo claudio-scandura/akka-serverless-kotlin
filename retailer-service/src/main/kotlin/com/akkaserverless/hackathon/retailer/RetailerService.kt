@@ -3,6 +3,8 @@
  */
 package com.akkaserverless.hackathon.retailer
 
+import com.akkaserverless.hackathon.item.ItemEntity
+import com.akkaserverless.hackathon.item.Items
 import io.cloudstate.kotlinsupport.cloudstate
 
 class RetailerService {
@@ -14,10 +16,21 @@ class RetailerService {
 
 fun main() {
     cloudstate {
+        config {
+            host = "0.0.0.0"
+            port = 8080
+            loglevel = "DEBUG"
+        }
         eventsourced {
             entityService = RetailerEntity::class
             descriptor = Retailers.getDescriptor().findServiceByName("RetailerService")
-            additionalDescriptors = mutableListOf(Retailers.getDescriptor())
+            additionalDescriptors = mutableListOf(Retailers.getDescriptor(), Items.getDescriptor())
+            persistenceId = "retailer"
+        }
+        crdt {
+            entityService = ItemEntity::class
+            descriptor = Items.getDescriptor().findServiceByName("ItemService")
+            additionalDescriptors = mutableListOf(Items.getDescriptor())
         }
     }.start().toCompletableFuture().get()
     println(RetailerService().greeting)

@@ -15,10 +15,10 @@ message Item {
   int32 price = 4;
 }
 
-//message Retailer {
-//  string retailer_id = 1 [(.cloudstate.entity_key) = true];
-//  repeated Item items = 2;
-//}
+message Retailer {
+  string retailer_id = 1 [(.cloudstate.entity_key) = true];
+  repeated Item items = 2;
+}
 
 message FindItemCommand {
   string retailer_id = 1 [(.cloudstate.entity_key) = true];
@@ -30,22 +30,12 @@ message UpsertItemCommand {
   Item item = 2;
 }
 
-message GetPriceUpdatesCommand {
-  string retailer_id = 1 [(.cloudstate.entity_key) = true];
-  string item_id = 2;
-}
-
 message ItemAdded {
   Item item = 1;
 }
 
 message ItemUpdated {
   Item item = 1;
-}
-
-message PriceUpdate {
-  string item_id = 1;
-  int32 price = 2;
 }
 
 service RetailerService {
