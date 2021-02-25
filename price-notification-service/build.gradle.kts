@@ -57,7 +57,7 @@ tasks {
 
         setDockerfile(rootProject.file("Dockerfile"))
 
-        name = "cscandura/${project.name}:0.1"
+        name = "cscandura/${project.name}:0.2"
 
         files("${project.buildDir}/distributions")
 

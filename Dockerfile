@@ -7,4 +7,6 @@ RUN tar xf /opt/*.tar -C /opt/ --strip-components 1 && rm /opt/*.tar
 
 ENV RUN_SCRIPT "./opt/bin/${RUNNABLE_NAME}"
 
+EXPOSE 8080
+
 ENTRYPOINT [ "sh", "-c" , "JAVA_OPTS=\"$DEFAULT_JAVA_OPTS $JAVA_OPTS\" $RUN_SCRIPT"]
