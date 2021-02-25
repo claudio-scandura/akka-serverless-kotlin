@@ -4,7 +4,7 @@ import com.akkaserverless.hackathon.item.ItemService
 import com.akkaserverless.hackathon.item.Items
 import com.akkaserverless.hackathon.item.Items.UpdatePriceCommand
 import com.akkaserverless.hackathon.retailer.Retailers.*
-import com.google.protobuf.Empty
+import com.google.protobuf.Timestamp
 import io.cloudstate.javasupport.eventsourced.CommandContext
 import io.cloudstate.javasupport.eventsourced.EventSourcedContext
 import io.cloudstate.javasupport.eventsourced.EventSourcedEntity
@@ -27,7 +27,7 @@ class RetailerEntity(@EntityId val entityId: String, ctx: EventSourcedContext) {
     }
 
     @CommandHandler
-    fun upsertItem(command: UpsertItemCommand, ctx: CommandContext): Empty {
+    fun upsertItem(command: UpsertItemCommand, ctx: CommandContext) {
         if (state.contains(command.item.itemId)) {
             ctx.emit(ItemUpdated.newBuilder().setItem(command.item).build())
         } else {
@@ -37,9 +37,9 @@ class RetailerEntity(@EntityId val entityId: String, ctx: EventSourcedContext) {
                 .setItemId(command.item.itemId)
                 .setItem(Items.Item.newBuilder().setDescription(command.item.description).setId(command.item.itemId))
                 .setRetailPrice(Items.RetailPrice.newBuilder().setRetailerId(entityId).setPrice(command.item.price))
+                .setUpdatedAt(Timestamp.newBuilder().setSeconds(System.currentTimeMillis()).setNanos(0))
                 .build()
-        ctx.effect(itemServiceCall.createCall(updatePriceCommand), true)
-        return Empty.getDefaultInstance()
+        ctx.forward(itemServiceCall.createCall(updatePriceCommand))
     }
 
     @EventHandler
