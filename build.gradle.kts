@@ -11,10 +11,11 @@ plugins {
 }
 
 
-allprojects {
+subprojects {
 
     apply {
         plugin("kotlin")
+        plugin("idea")
         plugin("application")
         plugin("com.palantir.docker")
         plugin("com.google.protobuf")

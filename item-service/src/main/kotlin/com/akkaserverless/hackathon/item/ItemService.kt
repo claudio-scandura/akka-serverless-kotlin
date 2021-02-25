@@ -3,6 +3,8 @@
  */
 package com.akkaserverless.hackathon.item
 
+import io.cloudstate.kotlinsupport.cloudstate
+
 class ItemService {
     val greeting: String
         get() {
@@ -11,5 +13,17 @@ class ItemService {
 }
 
 fun main() {
-    println(ItemService().greeting)
+
+    cloudstate {
+        config {
+            host = "0.0.0.0"
+            port = 8080
+            loglevel = "DEBUG"
+        }
+        crdt {
+            entityService = ItemEntity::class
+            descriptor = Items.getDescriptor().findServiceByName("ItemService")
+            additionalDescriptors = mutableListOf(Items.getDescriptor())
+        }
+    }.start().toCompletableFuture().get()
 }
