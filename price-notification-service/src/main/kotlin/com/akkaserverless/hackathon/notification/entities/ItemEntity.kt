@@ -1,6 +1,6 @@
-package com.akkaserverless.hackathon.item
+package com.akkaserverless.hackathon.notification.entities
 
-import com.akkaserverless.hackathon.item.Items.*
+import com.akkaserverless.hackathon.notification.entities.*
 import com.google.protobuf.Empty
 import com.google.protobuf.Timestamp
 import io.cloudstate.javasupport.crdt.CrdtCreationContext
